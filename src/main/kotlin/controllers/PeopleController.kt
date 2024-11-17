@@ -40,4 +40,16 @@ companion object{
         log.info("names: {}", names)
         return names
     }
+
+    @GetMapping("/range/p/{quantity}")
+    fun findPeoplesNameP(@PathVariable quantity: Long) : ArrayList<String> {
+        val start = LocalDateTime.now()
+        log.info("start: {}", start)
+        val names = findPeople.rangeParallel(quantity)
+        val end = LocalDateTime.now()
+        log.info("end  : {}", end)
+        log.info("total: {} ms", java.time.Duration.between(start, end).toMillis())
+        log.info("names: {}", names)
+        return names
+    }
 }
