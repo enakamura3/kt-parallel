@@ -52,4 +52,16 @@ companion object{
         log.info("names: {}", names)
         return names
     }
+
+    @GetMapping("/range/c/{quantity}")
+    suspend fun findPeoplesNameC(@PathVariable quantity: Long) : List<String> {
+        val start = LocalDateTime.now()
+        log.info("start: {}", start)
+        val names = findPeople.rangeCoroutine(quantity)
+        val end = LocalDateTime.now()
+        log.info("end  : {}", end)
+        log.info("total: {} ms", java.time.Duration.between(start, end).toMillis())
+        log.info("names: {}", names)
+        return names
+    }
 }

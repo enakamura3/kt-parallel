@@ -9,4 +9,7 @@ interface PeopleClient {
 
     @GetMapping("/people/{id}")
     fun findPeople(@PathVariable id: Long) : Map<String, Any>
+
+    @GetMapping("/people/{id}")
+    suspend fun findPeopleC(@PathVariable id: Long) : Map<String, Any>
 }

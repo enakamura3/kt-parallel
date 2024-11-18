@@ -7,4 +7,6 @@ import org.springframework.stereotype.Component
 class PeopleGateway(private val peopleClient: PeopleClient ) {
 
     fun findPeople(id : Long) = peopleClient.findPeople(id)
+
+    suspend fun findPeopleC(id : Long) = peopleClient.findPeopleC(id)
 }
