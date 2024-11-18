@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import org.slf4j.Logger
 import java.time.LocalDateTime
-import java.time.ZoneId
-import kotlin.time.Duration
+import org.springframework.http.ResponseEntity
+import kotlinx.coroutines.runBlocking
 
 @RestController
 @RequestMapping("/people")
@@ -51,5 +51,17 @@ companion object{
         log.info("total: {} ms", java.time.Duration.between(start, end).toMillis())
         log.info("names: {}", names)
         return names
+    }
+
+    @GetMapping("/range/c/{quantity}")
+    fun getPeople(@PathVariable quantity: Long): ResponseEntity<List<String>> = runBlocking {
+        val start = LocalDateTime.now()
+        log.info("start: {}", start)
+        val result = findPeople.rangeParallelC(quantity)
+        val end = LocalDateTime.now()
+        log.info("end  : {}", end)
+        log.info("total: {} ms", java.time.Duration.between(start, end).toMillis())
+        log.info("names: {}", result)
+        ResponseEntity.ok(result)
     }
 }

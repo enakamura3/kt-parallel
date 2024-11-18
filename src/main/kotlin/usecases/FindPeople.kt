@@ -1,9 +1,14 @@
 package org.example.usecases
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import org.example.gateways.PeopleGateway
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
+import java.util.Collections
 
 @Component
 class FindPeople(private val peopleGateway: PeopleGateway) {
@@ -35,5 +40,25 @@ class FindPeople(private val peopleGateway: PeopleGateway) {
             names.add(name)
         }.toList() // Operação terminal para coletar o resultado
         return names
+    }
+
+    suspend fun rangeParallelC(quantity: Long): ArrayList<String> = coroutineScope {
+        val names = Collections.synchronizedList(ArrayList<String>())
+
+        (1..quantity).map { id ->
+            async(Dispatchers.Default) {
+                log.debug("Processing id: {}", id)
+                val name = nameC(id)
+                names.add(name)
+            }
+        }.awaitAll()
+
+        ArrayList(names)
+    }
+
+    suspend fun nameC(id: Long) : String {
+        log.info("Find people name from id: {}", id)
+        val p = peopleGateway.findPeopleC(id)
+        return p["name"].toString()
     }
 }
