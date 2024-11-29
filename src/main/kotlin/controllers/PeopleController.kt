@@ -1,25 +1,26 @@
 package org.example.controllers
 
+import java.time.LocalDateTime
+import kotlinx.coroutines.runBlocking
 import org.example.usecases.FindPeople
+import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import org.slf4j.Logger
-import java.time.LocalDateTime
-import org.springframework.http.ResponseEntity
-import kotlinx.coroutines.runBlocking
 
 @RestController
 @RequestMapping("/people")
 class PeopleController(private val findPeople: FindPeople) {
 
-companion object{
-    val log: Logger = LoggerFactory.getLogger(PeopleController::class.java)
-}
+    companion object {
+        val log: Logger = LoggerFactory.getLogger(PeopleController::class.java)
+    }
+
     @GetMapping("/{id}")
-    fun findPeople(@PathVariable id: Long) : Map<String, Any> {
+    fun findPeople(@PathVariable id: Long): Map<String, Any> {
         val start = LocalDateTime.now()
         log.info("start: {}", start)
         val name = findPeople.name(id)
@@ -30,7 +31,7 @@ companion object{
     }
 
     @GetMapping("/range/{quantity}")
-    fun findPeoplesName(@PathVariable quantity: Long) : ArrayList<String> {
+    fun findPeoplesName(@PathVariable quantity: Long): ArrayList<String> {
         val start = LocalDateTime.now()
         log.info("start: {}", start)
         val names = findPeople.range(quantity)
@@ -42,7 +43,7 @@ companion object{
     }
 
     @GetMapping("/range/p/{quantity}")
-    fun findPeoplesNameP(@PathVariable quantity: Long) : ArrayList<String> {
+    fun findPeoplesNameP(@PathVariable quantity: Long): ArrayList<String> {
         val start = LocalDateTime.now()
         log.info("start: {}", start)
         val names = findPeople.rangeParallel(quantity)
